@@ -7,7 +7,9 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import { render } from '../render.js';
 
-export default class MainPresenter {
+const FILM_CARDS_COUNT = 5;
+
+export default class FilmListPresenter {
   boardContainerComponent = new FilmCardsBoardView();
   filmCardsListComponent = new FilmCardsListView();
   buttonContainerComponent = new ButtonContainerView();
@@ -21,7 +23,7 @@ export default class MainPresenter {
     render(this.buttonContainerComponent, this.boardContainerComponent.getElement());
     render(this.filmCardsListComponent, this.buttonContainerComponent.getElement());
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < FILM_CARDS_COUNT; i++) {
       render(new FilmCardView(), this.filmCardsListComponent.getElement());
     }
 
