@@ -1,5 +1,6 @@
 import { getRandomNumberInRange, changeHoursFormat } from '../utils.js';
 import { nanoid } from 'nanoid';
+import { allComments } from './film-comments.js';
 
 const MAX_RATING = 9;
 const MIN_RUNTIME = 70;
@@ -9,6 +10,7 @@ const MIN_YEAR = 1950;
 const MAX_YEAR = 2010;
 const MAX_MONTH = 12;
 const MAX_DAY = 30;
+const TOTAL_GENRES = 3;
 
 const generateFilmTitle = () => {
   const FILM_TITLES = [
@@ -114,7 +116,16 @@ const getRandomGenre = () => {
     'Romance',
     'Thriller'
   ];
-  return GENRES[getRandomNumberInRange(0, GENRES.length)];
+  const filmGenres = [];
+  for (let i = 0; i < TOTAL_GENRES; i++) {
+    filmGenres.push(GENRES[getRandomNumberInRange(0, GENRES.length)]);
+  }
+  return [...filmGenres];
+};
+
+const getAge = () => {
+  const AGE = ['0', '12+', '16+', '18+'];
+  return AGE[getRandomNumberInRange(0, AGE.length)];
 };
 
 const getFilmRuntime = () => {
@@ -127,15 +138,21 @@ const getReleaseDate = () => {
   return generateDate;
 };
 
+const generateFilmId = () => {
+  const filmId = nanoid(10);
+  allComments.push(filmId);
+  return filmId;
+};
+
 export const generateFilmCard = () => ({
-  id: nanoid(10),
+  id: generateFilmId(),
   comments: '',
   filmInfo: {
     title: generateFilmTitle(),
     alternativeTitle: generateFilmTitle(),
     totalRating: generateFilmRating(),
     poster: `images/posters/${getRandomPoster()}`,
-    ageRating: 0,
+    ageRating: getAge(),
     director: getRandomName(),
     writers: [
       getRandomName()
@@ -145,7 +162,7 @@ export const generateFilmCard = () => ({
     ],
     release: {
       'date': getReleaseDate(),
-      'release_country': getRandomCountry()
+      'country': getRandomCountry()
     },
     runTime: getFilmRuntime(),
     genre: [

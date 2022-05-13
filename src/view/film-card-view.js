@@ -1,8 +1,9 @@
 import { createElement } from '../render.js';
 import { changeDateFormatCard } from '../utils.js';
 
-const createFilmCardTemplate = (filmCard) => {
+const createFilmCardTemplate = (filmCard, filmComments) => {
   const {title, alternativeTitle, totalRating, poster, release, runTime, genre, description} = filmCard.filmInfo;
+  const totalFilmComments = filmComments.filter((comment) => comment.id === filmCard.id);
 
   return (
     `<article class="film-card">
@@ -17,7 +18,7 @@ const createFilmCardTemplate = (filmCard) => {
         <img src="${poster}" alt="${alternativeTitle}" class="film-card__poster">
         <p class="film-card__description">${description}
         </p>
-        <span class="film-card__comments">5 comments</span>
+        <span class="film-card__comments">${totalFilmComments.length} comments</span>
       </a>
       <div class="film-card__controls">
         <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
@@ -29,12 +30,13 @@ const createFilmCardTemplate = (filmCard) => {
 };
 
 export default class FilmCardView {
-  constructor(filmCard) {
+  constructor(filmCard, filmComments) {
     this.filmCard = filmCard;
+    this.filmComments = filmComments;
   }
 
   getTemplate() {
-    return createFilmCardTemplate(this.filmCard);
+    return createFilmCardTemplate(this.filmCard, this.filmComments);
   }
 
   getElement() {
