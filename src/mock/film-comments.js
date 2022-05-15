@@ -6,10 +6,10 @@ const MAX_COMMENT_DAYS = 730;
 const MAX_COMMENT_MINUTES = 90;
 
 export const Emoji = {
-  SMILE: '/images/emoji/smile.png',
-  SLEEPING: '/images/emoji/sleeping.png',
-  ANGRY: '/images/emoji/angry.png',
-  PUKE: '/images/emoji/puke.png'
+  SMILE: 'images/emoji/smile.png',
+  SLEEPING: 'images/emoji/sleeping.png',
+  ANGRY: 'images/emoji/angry.png',
+  PUKE: 'images/emoji/puke.png'
 };
 
 export const allComments = [];

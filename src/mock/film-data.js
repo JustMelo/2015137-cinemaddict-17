@@ -13,6 +13,7 @@ const MAX_DAY = 30;
 const TOTAL_GENRES = 3;
 
 const AGE = ['0', '12+', '16+', '18+'];
+
 const FILM_TITLES = [
   'Forrest Gump',
   'The Shawshank Redemption',
