@@ -6,10 +6,14 @@ const FILM_CARDS_PORTION = 5;
 const MAX_COMMENTS = 50;
 
 export default class FilmCardsModel {
-  filmCards = Array.from({length: FILM_CARDS_PORTION}, generateFilmCard);
-  filmComments = Array.from({length: getRandomNumberInRange(1, MAX_COMMENTS)}, generateFilmComments);
+  #filmCards = Array.from({length: FILM_CARDS_PORTION}, generateFilmCard);
+  #filmComments = Array.from({length: getRandomNumberInRange(1, MAX_COMMENTS)}, generateFilmComments);
 
-  getFilmCards = () => this.filmCards;
+  get filmCards() {
+    return this.#filmCards;
+  }
 
-  getFilmComments = () => this.filmComments;
+  get filmComments () {
+    return this.#filmComments;
+  }
 }

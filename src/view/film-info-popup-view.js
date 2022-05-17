@@ -30,7 +30,7 @@ const createFilmInfoTemplate = (filmCard, filmComments) => {
   const {title, alternativeTitle, totalRating, poster, release, runTime, genre, description, director, actors, writers, ageRating} = filmCard.filmInfo;
   const totalFilmComments = filmComments.filter((comment) => comment.id === filmCard.id);
   return (
-    `<section class="film-details">
+    `<section class="film-details visually-hidden">
        <form class="film-details__inner" action="" method="get">
          <div class="film-details__top-container">
            <div class="film-details__close">
@@ -148,23 +148,25 @@ const createFilmInfoTemplate = (filmCard, filmComments) => {
 };
 
 export default class FilmInfoPopupView {
+  #element = null;
+
   constructor(filmCard, filmComments) {
     this.filmCard = filmCard;
     this.filmComments = filmComments;
   }
 
-  getTemplate() {
+  get template() {
     return createFilmInfoTemplate(this.filmCard, this.filmComments);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
