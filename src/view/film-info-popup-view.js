@@ -30,7 +30,7 @@ const createFilmInfoTemplate = (filmCard, filmComments) => {
   const {title, alternativeTitle, totalRating, poster, release, runTime, genre, description, director, actors, writers, ageRating} = filmCard.filmInfo;
   const totalFilmComments = filmComments.filter((comment) => comment.id === filmCard.id);
   return (
-    `<section class="film-details visually-hidden">
+    `<section class="film-details">
        <form class="film-details__inner" action="" method="get">
          <div class="film-details__top-container">
            <div class="film-details__close">

@@ -7,61 +7,69 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import { render, RenderPosition } from '../render.js';
 import FilmInfoPopupView from '../view/film-info-popup-view.js';
+import { isEscapeKey } from '../utils.js';
 
 const filmInfoPopupElement = document.querySelector('.footer');
 
 export default class FilmListPresenter {
   #boardContainer = null;
   #filmCards = null;
+  #filmComments = null;
 
   #cardsContainerComponent = new FilmCardsBoardView();
   #filmCardsListComponent = new FilmCardsListView();
   #buttonSectionComponent = new ButtonSectionView();
 
   init = (boardContainer, filmCardsModel) => {
-    this.boardContainer = boardContainer;
+    this.#boardContainer = boardContainer;
     this.filmCardsModel = filmCardsModel;
-    this.filmCards = [...this.filmCardsModel.filmCards];
-    this.filmComments = [...this.filmCardsModel.filmComments];
+    this.#filmCards = [...this.filmCardsModel.filmCards];
+    this.#filmComments = [...this.filmCardsModel.filmComments];
 
-    render(new FiltersView(), this.boardContainer);
-    render(new SortView(), this.boardContainer);
-    render(this.#cardsContainerComponent, this.boardContainer);
+    render(new FiltersView(), this.#boardContainer);
+    render(new SortView(), this.#boardContainer);
+    render(this.#cardsContainerComponent, this.#boardContainer);
     render(this.#buttonSectionComponent, this.#cardsContainerComponent.element);
     render(this.#filmCardsListComponent, this.#buttonSectionComponent.element);
 
-    for (let i = 0; i < this.filmCards.length; i++) {
-      this.#renderFilmCard(this.filmCards[i]);
+    for (let i = 0; i < this.#filmCards.length; i++) {
+      this.#renderFilmCard(this.#filmCards[i]);
     }
-
-    // render(new FilmInfoPopupView(this.filmCards[4], this.filmComments), filmInfoPopupElement, RenderPosition.AFTEREND);
-    this.#showPopup(this.filmCards[4]);
     render(new ShowMoreButtonView(), this.#buttonSectionComponent.element);
   };
 
   #showPopup = (filmCard) => {
-    const popupFilmInfo = new FilmInfoPopupView(filmCard, this.filmComments);
-
-    const hidePopupFilmInfo = () => {
-      popupFilmInfo.element.querySelector('section.film-details').classList.add('visually-hidden');
+    const onEscKeyDown = (evt) => {
+      if (isEscapeKey(evt)) {
+        evt.preventDefault();
+        closePopup();
+      }
     };
 
-    popupFilmInfo.querySelector('button.film-details__close-btn').addEventListener('click', () => {
-      hidePopupFilmInfo();
+    if (document.body.querySelector('section.film-details')) {
+      closePopup();
+    }
+
+    const popupFilmInfoComponent = new FilmInfoPopupView(filmCard, this.#filmComments);
+
+    popupFilmInfoComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+      closePopup();
     });
 
-    render(popupFilmInfo, filmInfoPopupElement, RenderPosition.AFTEREND);
+    function closePopup () {
+      document.removeEventListener('keydown', onEscKeyDown);
+      document.body.querySelector('section.film-details').remove();
+    }
+
+    document.addEventListener('keydown', onEscKeyDown);
+    render(popupFilmInfoComponent, filmInfoPopupElement, RenderPosition.AFTEREND);
   };
 
   #renderFilmCard = (filmCard) => {
-    const filmCardComponent = new FilmCardView(filmCard, this.filmComments);
-
-    const openPopupElement = () => {
-      filmCardComponent.element.querySelector('section.film-details').classList.remove('visually-hidden');
-    };
+    const filmCardComponent = new FilmCardView(filmCard, this.#filmComments);
 
     filmCardComponent.element.querySelector('img').addEventListener('click', () => {
-      openPopupElement();
+      this.#showPopup(filmCard);
     });
 
     render(filmCardComponent, this.#filmCardsListComponent.element);
