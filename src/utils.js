@@ -7,4 +7,6 @@ const changeDateFormatComment = (someDate) => dayjs(someDate).format('YYYY/MM/DD
 const changeDateFormatCard = (someDate) => dayjs(someDate).format('YYYY');
 const changeHoursFormat = (minutes) => dayjs(minutes).minute(minutes).format('h[h] mm[m]');
 
-export {getRandomNumberInRange, changeDateFormatPopup, changeDateFormatCard, changeHoursFormat, changeDateFormatComment };
+const isEscapeKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+export {getRandomNumberInRange, changeDateFormatPopup, changeDateFormatCard, changeHoursFormat, changeDateFormatComment, isEscapeKey };

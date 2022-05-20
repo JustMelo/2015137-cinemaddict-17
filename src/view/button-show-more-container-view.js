@@ -1,25 +1,27 @@
 import { createElement } from '../render.js';
 
-const createButtonContainerTemplate = () => (
+const createButtonSectionTemplate = () => (
   `<section class="films-list">
     <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
   </section>`
 );
 
-export default class ButtonContainerView {
-  getTemplate() {
-    return createButtonContainerTemplate();
+export default class ButtonSectionView {
+  #element = null;
+
+  get template() {
+    return createButtonSectionTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
 

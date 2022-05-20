@@ -1,10 +1,14 @@
 import { createElement } from '../render.js';
 import { changeDateFormatCard } from '../utils.js';
 
+const MAX_DESCRIPTION_LENGTH = 140;
+
+const checkDescriptionLength = (someString) => someString.length > MAX_DESCRIPTION_LENGTH ? someString.slice(0, (MAX_DESCRIPTION_LENGTH - 1)).concat('...') : someString;
+
 const createFilmCardTemplate = (filmCard, filmComments) => {
   const {title, alternativeTitle, totalRating, poster, release, runTime, genre, description} = filmCard.filmInfo;
   const totalFilmComments = filmComments.filter((comment) => comment.id === filmCard.id);
-
+  const cardDescription = description.toString();
   return (
     `<article class="film-card">
       <a class="film-card__link">
@@ -16,7 +20,7 @@ const createFilmCardTemplate = (filmCard, filmComments) => {
           <span class="film-card__genre">${genre}</span>
         </p>
         <img src="${poster}" alt="${alternativeTitle}" class="film-card__poster">
-        <p class="film-card__description">${description}
+        <p class="film-card__description">${checkDescriptionLength(cardDescription)}
         </p>
         <span class="film-card__comments">${totalFilmComments.length} comments</span>
       </a>
@@ -30,23 +34,25 @@ const createFilmCardTemplate = (filmCard, filmComments) => {
 };
 
 export default class FilmCardView {
+  #element = null;
+
   constructor(filmCard, filmComments) {
     this.filmCard = filmCard;
     this.filmComments = filmComments;
   }
 
-  getTemplate() {
+  get template() {
     return createFilmCardTemplate(this.filmCard, this.filmComments);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
