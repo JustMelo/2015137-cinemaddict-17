@@ -7,9 +7,11 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import FilmInfoPopupView from '../view/film-info-popup-view.js';
 import NoFilmCardView from '../view/no-film-card-view.js';
+import UserRankView from '../view/user-rank-view.js';
 import { render, RenderPosition } from '../render.js';
 import { isEscapeKey } from '../utils.js';
 
+const userRankElement = document.querySelector('.header');
 const filmInfoPopupElement = document.querySelector('.footer');
 
 const FILM_PER_STEP = 5;
@@ -26,12 +28,20 @@ export default class FilmListPresenter {
 
   #renderedFilmsCount = FILM_PER_STEP;
 
-  init = (boardContainer, filmCardsModel) => {
+  constructor(boardContainer, filmCardsModel) {
     this.#boardContainer = boardContainer;
     this.filmCardsModel = filmCardsModel;
+  }
+
+  init = () => {
     this.#filmCards = [...this.filmCardsModel.filmCards];
     this.#filmComments = [...this.filmCardsModel.filmComments];
 
+    this.#renderBoard();
+  };
+
+  #renderBoard = () => {
+    render(new UserRankView(), userRankElement);
     render(new FiltersView(), this.#boardContainer);
     render(new SortView(), this.#boardContainer);
     render(this.#cardsContainerComponent, this.#boardContainer);
