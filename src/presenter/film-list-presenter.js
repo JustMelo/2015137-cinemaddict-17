@@ -74,37 +74,34 @@ export default class FilmListPresenter {
     }
   };
 
+  #handleEscKeyDown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      document.removeEventListener('keydown', this.#handleEscKeyDown);
+      document.body.querySelector('section.film-details').remove();
+    }
+  };
+
   #showPopup = (filmCard) => {
     const popupFilmInfoComponent = new FilmInfoPopupView(filmCard, this.#filmComments);
 
-    const onEscKeyDown = (evt) => {
-      if (isEscapeKey(evt)) {
-        evt.preventDefault();
-        document.removeEventListener('keydown', onEscKeyDown);
-        document.body.querySelector('section.film-details').remove();
-      }
-    };
-
-    function openPopup () {
-      document.body.classList.add('hide-overflow');
-      document.addEventListener('keydown', onEscKeyDown);
-      popupFilmInfoComponent.element.querySelector('.film-details__close-btn').addEventListener('mouseup', () => {
-        closePopup();
-      });
-
-      render(popupFilmInfoComponent, filmInfoPopupElement, RenderPosition.AFTEREND);
-    }
-
-    function closePopup () {
-      document.body.classList.remove('hide-overflow');
-      document.removeEventListener('keydown', onEscKeyDown);
-      document.body.querySelector('section.film-details').remove();
-    }
-
     if (document.body.querySelector('section.film-details')) {
-      closePopup();
+      this.#closePopup();
     }
-    openPopup();
+
+    document.body.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#handleEscKeyDown);
+    popupFilmInfoComponent.element.querySelector('.film-details__close-btn').addEventListener('mouseup', () => {
+      this.#closePopup();
+    });
+
+    render(popupFilmInfoComponent, filmInfoPopupElement, RenderPosition.AFTEREND);
+  };
+
+  #closePopup = () => {
+    document.body.classList.remove('hide-overflow');
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
+    document.body.querySelector('section.film-details').remove();
   };
 
   #renderFilmCard = (filmCard) => {
@@ -116,6 +113,4 @@ export default class FilmListPresenter {
 
     render(filmCardComponent, this.#filmCardsListComponent.element);
   };
-
 }
-
