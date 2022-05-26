@@ -8,7 +8,7 @@ import SortView from '../view/sort-view.js';
 import FilmInfoPopupView from '../view/film-info-popup-view.js';
 import NoFilmCardView from '../view/no-film-card-view.js';
 import UserRankView from '../view/user-rank-view.js';
-import { render, RenderPosition } from '../render.js';
+import { render, RenderPosition } from '../framework/render.js';
 import { isEscapeKey } from '../utils.js';
 
 const userRankElement = document.querySelector('.header');
@@ -59,12 +59,11 @@ export default class FilmListPresenter {
 
     if (this.#filmCards.length > FILM_PER_STEP) {
       render(this.#loadMoreFilmButtonComponent, this.#buttonSectionComponent.element);
-      this.#loadMoreFilmButtonComponent.element.addEventListener('click', this.#handleLoadMoreButtonClick);
+      this.#loadMoreFilmButtonComponent.setClickHandler(this.#handleLoadMoreButtonClick);
     }
   };
 
-  #handleLoadMoreButtonClick = (evt) => {
-    evt.preventDefault();
+  #handleLoadMoreButtonClick = () => {
     this.#filmCards.slice(this.#renderedFilmsCount, this.#renderedFilmsCount + FILM_PER_STEP).forEach((card) => this.#renderFilmCard(card));
     this.#renderedFilmsCount += FILM_PER_STEP;
 
@@ -91,9 +90,7 @@ export default class FilmListPresenter {
 
     document.body.classList.add('hide-overflow');
     document.addEventListener('keydown', this.#handleEscKeyDown);
-    popupFilmInfoComponent.element.querySelector('.film-details__close-btn').addEventListener('mouseup', () => {
-      this.#closePopup();
-    });
+    popupFilmInfoComponent.setClosePopupClickHandler(() => this.#closePopup());
 
     render(popupFilmInfoComponent, filmInfoPopupElement, RenderPosition.AFTEREND);
   };
@@ -106,11 +103,7 @@ export default class FilmListPresenter {
 
   #renderFilmCard = (filmCard) => {
     const filmCardComponent = new FilmCardView(filmCard, this.#filmComments);
-
-    filmCardComponent.element.querySelector('img').addEventListener('click', () => {
-      this.#showPopup(filmCard);
-    });
-
+    filmCardComponent.setShowPopupClickHandler(() => this.#showPopup(filmCard));
     render(filmCardComponent, this.#filmCardsListComponent.element);
   };
 }

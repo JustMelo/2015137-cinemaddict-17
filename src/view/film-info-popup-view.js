@@ -1,5 +1,5 @@
 import { Emoji } from '../mock/film-comments.js';
-import { createElement } from '../render.js';
+import  AbstractView  from '../framework/view/abstract-view.js';
 import { changeDateFormatComment, changeDateFormatPopup } from '../utils.js';
 
 const createFilmCommentsTemplate = (filmCard, filmComments) => {
@@ -147,26 +147,28 @@ const createFilmInfoTemplate = (filmCard, filmComments) => {
   );
 };
 
-export default class FilmInfoPopupView {
-  #element = null;
+export default class FilmInfoPopupView extends AbstractView {
+  #filmCard = null;
+  #filmComments = null;
 
   constructor(filmCard, filmComments) {
-    this.filmCard = filmCard;
-    this.filmComments = filmComments;
+    super();
+
+    this.#filmCard = filmCard;
+    this.#filmComments = filmComments;
   }
 
   get template() {
-    return createFilmInfoTemplate(this.filmCard, this.filmComments);
+    return createFilmInfoTemplate(this.#filmCard, this.#filmComments);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setClosePopupClickHandler = (callback) => {
+    this._callback.clickClosePopup = callback;
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickClosePopupHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #clickClosePopupHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.clickClosePopup();
+  };
 }

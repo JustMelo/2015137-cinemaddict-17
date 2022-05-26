@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import  AbstractView  from '../framework/view/abstract-view.js';
 import { changeDateFormatCard } from '../utils.js';
 
 const MAX_DESCRIPTION_LENGTH = 140;
@@ -33,26 +33,28 @@ const createFilmCardTemplate = (filmCard, filmComments) => {
   );
 };
 
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
+  #filmCard = null;
+  #filmComments = null;
 
   constructor(filmCard, filmComments) {
-    this.filmCard = filmCard;
-    this.filmComments = filmComments;
+    super();
+
+    this.#filmCard = filmCard;
+    this.#filmComments = filmComments;
   }
 
   get template() {
-    return createFilmCardTemplate(this.filmCard, this.filmComments);
+    return createFilmCardTemplate(this.#filmCard, this.#filmComments);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setShowPopupClickHandler = (callback) => {
+    this._callback.clickShowPopup = callback;
+    this.element.querySelector('img').addEventListener('click', this.#clickShowPopupHandler);
+  };
 
-  removeElement() {
-    this.#element = null;
-  }
+  #clickShowPopupHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.clickShowPopup();
+  };
 }
